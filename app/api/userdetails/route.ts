@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     }
 
     // Extract token from the Authorization header
-    const token = authHeader.split(' ')[1]; // Assumes the format is "Bearer <token>"
+    const token = authHeader; // Assumes the format is "Bearer <token>"
     if (!token) {
       return NextResponse.json({ error: 'Token is missing' }, { status: 401 });
     }
