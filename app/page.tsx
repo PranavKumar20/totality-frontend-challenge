@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import PropertyCard from './components/PropertyCard';
+import { API_URL } from './config';
 
 // Define the Property type based on the API response
 interface Property {
@@ -22,7 +23,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/properties/all'); // Updated to your specific endpoint
+        const response = await fetch(`${API_URL}/properties/all`); // Updated to your specific endpoint
         const data = await response.json();
         setProperties(data);
       } catch (error) {
