@@ -17,6 +17,7 @@ export async function GET(request: Request, { params }: { params: { propertyId: 
 
     return NextResponse.json(property, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error fetching property' }, { status: 500 });
   }
 }
@@ -36,6 +37,7 @@ export async function DELETE(request: Request, { params }: { params: { propertyI
 
     return NextResponse.json({ message: 'Property deleted successfully' }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error deleting property' }, { status: 500 });
   }
 }

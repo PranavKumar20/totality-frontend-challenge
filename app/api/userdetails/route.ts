@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     }
 
     // Verify the token
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded: any = jwt.verify(token as string, process.env.JWT_SECRET as string);
     const userId = decoded.userId;
     console.log(userId);
 

@@ -36,6 +36,7 @@ const Signup = () => {
         setError(errorData.message || 'Signup failed. Please try again.');
       }
     } catch (error) {
+      console.log(error);
       setError('An error occurred. Please try again.');
     }
   };

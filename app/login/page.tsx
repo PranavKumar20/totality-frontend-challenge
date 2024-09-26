@@ -35,6 +35,7 @@ const Login = () => {
         setError(errorData.message || 'Login failed. Please try again.');
       }
     } catch (error) {
+      console.log(error);
       setError('An error occurred. Please try again.');
     }
   };
@@ -68,7 +69,7 @@ const Login = () => {
             Log In
           </button>
         </form>
-        <p className="text-center text-gray-600 mt-4">Don't have an account? <a href="/signup" className="text-blue-600 hover:underline">Sign Up</a></p>
+        <p className="text-center text-gray-600 mt-4">Don`&apos;`t have an account? <a href="/signup" className="text-blue-600 hover:underline">Sign Up</a></p>
       </div>
     </div>
   );

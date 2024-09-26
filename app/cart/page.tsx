@@ -158,6 +158,7 @@ const CartPage = () => {
   };
 
   const handleIncrease = (propertyId: string, currentQuantity: number) => {
+    console.log(currentQuantity);
     updateCartItem(propertyId,1); // Increase quantity by 1
   };
 

@@ -36,7 +36,7 @@ const ProfilePage = () => {
 
       try {
         // Decode the JWT token to get userId
-        const decodedToken: any = jwt.decode(token);
+        const decodedToken:any = jwt.decode(token);
         const userId = decodedToken?.userId;
 
         if (!userId) {

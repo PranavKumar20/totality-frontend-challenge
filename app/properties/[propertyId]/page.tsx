@@ -21,7 +21,6 @@ const PropertyDetailsPage = () => {
   const [quantity, setQuantity] = useState(1); // Default quantity is 1
   const [isLoading, setIsLoading] = useState(true);
   const { propertyId } = useParams(); // To get the propertyId from the URL
-  const router = useRouter();
 
   useEffect(() => {
     const fetchPropertyDetails = async () => {
