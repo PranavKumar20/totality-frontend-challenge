@@ -21,6 +21,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(cart.items, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error fetching cart' }, { status: 500 });
   }
 }

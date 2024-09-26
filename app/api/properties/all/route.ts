@@ -8,6 +8,7 @@ export async function GET() {
     const properties = await Property.find({});
     return NextResponse.json(properties, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error fetching properties' }, { status: 500 });
   }
 }

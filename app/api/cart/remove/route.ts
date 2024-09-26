@@ -20,6 +20,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ message: 'Property removed from cart' }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error removing property from cart' }, { status: 500 });
   }
 }

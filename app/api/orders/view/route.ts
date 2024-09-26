@@ -16,6 +16,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(orders, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error fetching orders' }, { status: 500 });
   }
 }

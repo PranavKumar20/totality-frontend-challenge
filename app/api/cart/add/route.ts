@@ -26,6 +26,7 @@ export async function POST(request: Request) {
     await cart.save();
     return NextResponse.json({ message: 'Property added to cart' }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error adding to cart' }, { status: 500 });
   }
 }

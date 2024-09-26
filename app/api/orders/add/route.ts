@@ -22,6 +22,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: 'Order added successfully', orderId: newOrder._id }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error adding order' }, { status: 500 });
   }
 }

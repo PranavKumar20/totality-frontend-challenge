@@ -23,6 +23,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Property not found in cart' }, { status: 404 });
     }
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error updating quantity' }, { status: 500 });
   }
 }

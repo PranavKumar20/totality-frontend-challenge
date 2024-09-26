@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     await newProperty.save();
     return NextResponse.json({ message: 'Property added successfully' }, { status: 201 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error adding property' }, { status: 500 });
   }
 }

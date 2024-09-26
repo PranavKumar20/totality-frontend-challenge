@@ -66,6 +66,7 @@ export async function PUT(request: Request, { params }: { params: { propertyId: 
       newRating: property.rating,
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }

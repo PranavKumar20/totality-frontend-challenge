@@ -26,6 +26,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ totalPrice }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: 'Error calculating total price' }, { status: 500 });
   }
 }
