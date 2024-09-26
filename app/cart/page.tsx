@@ -1,6 +1,6 @@
 "use client"; // Ensure this component is client-side rendered
 import React, { useEffect, useState } from 'react';
-import {API_URL} from '@/app/config'
+import { API_URL } from '@/app/config';
 
 // Define types for the property details
 interface Property {
@@ -62,11 +62,18 @@ const CartPage = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const userId = localStorage.getItem('userId') || 'user_pya82fzn7bs'; // Replace with decoded JWT userId
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Fetch userId from localStorage after component mounts
+  useEffect(() => {
+    const userIdFromStorage = localStorage.getItem('userId');
+    setUserId(userIdFromStorage || 'user_pya82fzn7bs'); // Fallback ID
+  }, []);
 
   // Fetch cart items
   useEffect(() => {
     const fetchCartItems = async () => {
+      if (!userId) return; // Ensure userId is available
       try {
         const response = await fetch(`${API_URL}/cart/view?userId=${userId}`);
         const data: CartItem[] = await response.json();
@@ -82,6 +89,7 @@ const CartPage = () => {
   // Fetch property details based on cart items
   useEffect(() => {
     const fetchPropertyDetails = async () => {
+      if (cartItems.length === 0) return; // No cart items to fetch details for
       try {
         const propertiesData: Property[] = await Promise.all(
           cartItems.map(async (item) => {
@@ -95,14 +103,13 @@ const CartPage = () => {
       }
     };
 
-    if (cartItems.length > 0) {
-      fetchPropertyDetails();
-    }
+    fetchPropertyDetails();
   }, [cartItems]);
 
   // Fetch total price of cart items
   useEffect(() => {
     const fetchTotalPrice = async () => {
+      if (!userId) return; // Ensure userId is available
       try {
         const response = await fetch(`${API_URL}/cart/total?userId=${userId}`);
         const data = await response.json();
@@ -113,7 +120,7 @@ const CartPage = () => {
     };
 
     fetchTotalPrice();
-  }, [cartItems, userId]); // Re-run if cartItems or userId changes
+  }, [cartItems, userId]);
 
   const handleCheckout = () => {
     setShowModal(true);
@@ -159,12 +166,12 @@ const CartPage = () => {
 
   const handleIncrease = (propertyId: string, currentQuantity: number) => {
     console.log(currentQuantity);
-    updateCartItem(propertyId,1); // Increase quantity by 1
+    updateCartItem(propertyId, 1); // Increase quantity by 1
   };
 
   const handleDecrease = (propertyId: string, currentQuantity: number) => {
     if (currentQuantity > 1) {
-      updateCartItem(propertyId,-1); // Decrease quantity by 1
+      updateCartItem(propertyId, -1); // Decrease quantity by 1
     }
   };
 

@@ -34,9 +34,9 @@ const ProfilePage = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
-
+  
   useEffect(() => {
+    const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
     const fetchUserDetails = async () => {
       if (!token) return;
 
@@ -79,7 +79,7 @@ const ProfilePage = () => {
     };
 
     fetchUserDetails();
-  }, [token]);
+  }, []);
 
   if (loading) return <p>Loading...</p>;
 
