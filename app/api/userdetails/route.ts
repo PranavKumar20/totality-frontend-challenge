@@ -4,6 +4,11 @@ import jwt from 'jsonwebtoken';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
 
+interface DecodedToken {
+  userId: string; // Adjust the type if userId is not a string
+  // Add other properties if your token contains them
+}
+
 export async function GET(request: Request) {
   try {
     // Get the Authorization header
@@ -14,13 +19,13 @@ export async function GET(request: Request) {
     }
 
     // Extract token from the Authorization header
-    const token = authHeader; // Assumes the format is "Bearer <token>"
+    const token = authHeader.split(' ')[1]; // Assumes the format is "Bearer <token>"
     if (!token) {
       return NextResponse.json({ error: 'Token is missing' }, { status: 401 });
     }
 
     // Verify the token
-    const decoded: any = jwt.verify(token as string, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DecodedToken; // Use the defined type
     const userId = decoded.userId;
     console.log(userId);
 

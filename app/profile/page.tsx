@@ -24,6 +24,12 @@ interface Order {
   createdAt: string;
 }
 
+// Define the interface for the decoded JWT token
+interface DecodedToken {
+  userId: string; // Adjust the type if userId is not a string
+  // Include other properties if your token contains them
+}
+
 const ProfilePage = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -36,7 +42,7 @@ const ProfilePage = () => {
 
       try {
         // Decode the JWT token to get userId
-        const decodedToken:any = jwt.decode(token);
+        const decodedToken = jwt.decode(token) as DecodedToken; // Use the defined type
         const userId = decodedToken?.userId;
 
         if (!userId) {

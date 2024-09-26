@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation'; // To get the dynamic propertyId from the URL
 import Navbar from '@/app/components/Navbar';
 import { API_URL } from '@/app/config';
