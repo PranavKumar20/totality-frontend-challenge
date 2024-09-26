@@ -6,6 +6,7 @@ export async function GET() {
   try {
     await connectToDatabase();
     const properties = await Property.find({});
+    console.log(properties);
     return NextResponse.json(properties, { status: 200 });
   } catch (error) {
     console.log(error);
