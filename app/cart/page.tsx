@@ -77,6 +77,7 @@ const CartPage = () => {
     const fetchCartItems = async () => {
       if (!userId) return;
       try {
+        console.log(userId);
         const response = await fetch(`${API_URL}/cart/view?userId=${userId}`);
         const data: CartItem[] = await response.json();
         setCartItems(data);
