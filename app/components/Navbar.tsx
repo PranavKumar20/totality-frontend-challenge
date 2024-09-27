@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import jwt from 'jsonwebtoken'; // Use jsonwebtoken
+import jwt from 'jsonwebtoken'; 
+import { IoCartOutline } from "react-icons/io5";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,7 +14,6 @@ const Navbar = () => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
-      // Decode the token
       const decodedToken = jwt.decode(token) as { email: string };
       setEmailFirstLetter(decodedToken.email.charAt(0).toUpperCase());
     }
@@ -47,16 +47,16 @@ const Navbar = () => {
     <nav className="flex justify-between items-center p-4 bg-blue-500">
       <h1 
         className="text-white text-xl cursor-pointer" 
-        onClick={() => router.push('/')} // Redirect to homepage
+        onClick={() => router.push('/')} 
       >
         Property Rental
       </h1>
       <div className="flex items-center">
         <button 
-          onClick={() => router.push('/cart')} // Redirect to cart page
+          onClick={() => router.push('/cart')} 
           className="text-white mr-4"
         >
-          🛒 {/* You can replace this with a cart icon from an icon library */}
+          <IoCartOutline />
         </button>
         {isLoggedIn ? (
           <div className="relative">

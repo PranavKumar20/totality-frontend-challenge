@@ -2,19 +2,15 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import Property from '@/models/Property';
 
-// GET specific property details
 export async function GET(request: Request, { params }: { params: { propertyId: string } }) {
-  const { propertyId } = params;  // Get propertyId from dynamic route
+  const { propertyId } = params;  
 
   try {
-    await connectToDatabase();
-    
+    await connectToDatabase();  
     const property = await Property.findOne({ propertyId });
-
     if (!property) {
       return NextResponse.json({ error: 'Property not found' }, { status: 404 });
     }
-
     return NextResponse.json(property, { status: 200 });
   } catch (error) {
     console.log(error);
@@ -22,19 +18,14 @@ export async function GET(request: Request, { params }: { params: { propertyId: 
   }
 }
 
-// DELETE a specific property
 export async function DELETE(request: Request, { params }: { params: { propertyId: string } }) {
-  const { propertyId } = params;  // Get propertyId from dynamic route
-
+  const { propertyId } = params; 
   try {
     await connectToDatabase();
-    
     const property = await Property.findOneAndDelete({ propertyId });
-
     if (!property) {
       return NextResponse.json({ error: 'Property not found' }, { status: 404 });
     }
-
     return NextResponse.json({ message: 'Property deleted successfully' }, { status: 200 });
   } catch (error) {
     console.log(error);
@@ -42,7 +33,6 @@ export async function DELETE(request: Request, { params }: { params: { propertyI
   }
 }
 
-// PUT (Update) a specific property's rating
 export async function PUT(request: Request, { params }: { params: { propertyId: string } }) {
   const { propertyId } = params;
   const { rating } = await request.json();

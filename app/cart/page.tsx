@@ -1,8 +1,8 @@
-"use client"; // Ensure this component is client-side rendered
+"use client";
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '@/app/config';
+import jwt from 'jsonwebtoken'; 
 
-// Define types for the property details
 interface Property {
   _id: string;
   propertyId: string;
@@ -11,13 +11,11 @@ interface Property {
   imageUrls: string[];
 }
 
-// Define type for the cart item
 interface CartItem {
   propertyId: string;
   quantity: number;
 }
 
-// Item component to display individual cart item details
 const Item: React.FC<{
   property: Property;
   quantity: number;
@@ -42,7 +40,6 @@ const Item: React.FC<{
   );
 };
 
-// Confirmation modal component
 const ConfirmationModal: React.FC<{ onConfirm: () => void; onCancel: () => void }> = ({ onConfirm, onCancel }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -64,16 +61,21 @@ const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Fetch userId from localStorage after component mounts
   useEffect(() => {
-    const userIdFromStorage = localStorage.getItem('userId');
-    setUserId(userIdFromStorage || 'user_pya82fzn7bs'); // Fallback ID
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwt.decode(token) as { userId: string };
+        setUserId(decodedToken.userId);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
   }, []);
 
-  // Fetch cart items
   useEffect(() => {
     const fetchCartItems = async () => {
-      if (!userId) return; // Ensure userId is available
+      if (!userId) return;
       try {
         const response = await fetch(`${API_URL}/cart/view?userId=${userId}`);
         const data: CartItem[] = await response.json();
@@ -86,10 +88,9 @@ const CartPage = () => {
     fetchCartItems();
   }, [userId]);
 
-  // Fetch property details based on cart items
   useEffect(() => {
     const fetchPropertyDetails = async () => {
-      if (cartItems.length === 0) return; // No cart items to fetch details for
+      if (cartItems.length === 0) return; 
       try {
         const propertiesData: Property[] = await Promise.all(
           cartItems.map(async (item) => {
@@ -106,10 +107,9 @@ const CartPage = () => {
     fetchPropertyDetails();
   }, [cartItems]);
 
-  // Fetch total price of cart items
   useEffect(() => {
     const fetchTotalPrice = async () => {
-      if (!userId) return; // Ensure userId is available
+      if (!userId) return;
       try {
         const response = await fetch(`${API_URL}/cart/total?userId=${userId}`);
         const data = await response.json();
@@ -136,9 +136,8 @@ const CartPage = () => {
         body: JSON.stringify({ userId }),
       });
       const result = await response.json();
-      alert(result.message); // Show checkout success message
-      // Redirect to profile page
-      window.location.href = '/profile'; // Redirect to profile page
+      alert(result.message); 
+      window.location.href = '/profile'; 
     } catch (error) {
       console.error('Error during checkout:', error);
     } finally {
@@ -165,13 +164,12 @@ const CartPage = () => {
   };
 
   const handleIncrease = (propertyId: string, currentQuantity: number) => {
-    console.log(currentQuantity);
-    updateCartItem(propertyId, 1); // Increase quantity by 1
+    updateCartItem(propertyId, 1); 
   };
 
   const handleDecrease = (propertyId: string, currentQuantity: number) => {
     if (currentQuantity > 1) {
-      updateCartItem(propertyId, -1); // Decrease quantity by 1
+      updateCartItem(propertyId, -1); 
     }
   };
 
@@ -185,8 +183,7 @@ const CartPage = () => {
         body: JSON.stringify({ userId, propertyId }),
       });
 
-      // Update cart items state
-      setCartItems((prevItems) => prevItems.filter(item => item.propertyId !== propertyId));
+      setCartItems((prevItems) => prevItems.filter((item) => item.propertyId !== propertyId));
     } catch (error) {
       console.error('Error removing cart item:', error);
     }
