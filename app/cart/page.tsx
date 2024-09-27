@@ -164,6 +164,7 @@ const CartPage = () => {
   };
 
   const handleIncrease = (propertyId: string, currentQuantity: number) => {
+    console.log(currentQuantity);
     updateCartItem(propertyId, 1); 
   };
 
