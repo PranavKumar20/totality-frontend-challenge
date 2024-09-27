@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation'; // To get the dynamic propertyId from the URL
+import { useParams } from 'next/navigation';
+import jwt from 'jsonwebtoken'; 
 import Navbar from '@/app/components/Navbar';
 import { API_URL } from '@/app/config';
 
-// Define the Property type based on the API response
 interface Property {
   propertyId: string;
   name: string;
@@ -17,9 +17,10 @@ interface Property {
 
 const PropertyDetailsPage = () => {
   const [property, setProperty] = useState<Property | null>(null);
-  const [quantity, setQuantity] = useState(1); // Default quantity is 1
+  const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const { propertyId } = useParams(); // To get the propertyId from the URL
+  const [userId, setUserId] = useState<string | null>(null); 
+  const { propertyId } = useParams(); 
 
   useEffect(() => {
     const fetchPropertyDetails = async () => {
@@ -37,7 +38,24 @@ const PropertyDetailsPage = () => {
     fetchPropertyDetails();
   }, [propertyId]);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token'); 
+    if (token) {
+      try {
+        const decodedToken: any = jwt.decode(token); 
+        setUserId(decodedToken.userId); 
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+  }, []);
+
   const handleAddToCart = async () => {
+    if (!userId) {
+      alert('User not logged in');
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/cart/add`, {
         method: 'POST',
@@ -45,7 +63,7 @@ const PropertyDetailsPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: 'user_pya82fzn7bs', // Replace with actual logged-in user ID
+          userId,
           propertyId: property?.propertyId,
           quantity,
         }),
