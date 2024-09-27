@@ -27,9 +27,7 @@ export async function POST(request: Request) {
     const payload = { userId: newUser.userId, email: newUser.email };
     console.log(payload);
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-      expiresIn: '48h',
-    });
+    const token = jwt.sign(payload, process.env.JWT_SECRET as string);
 
     return NextResponse.json({ token }, { status: 201 });
   } catch (error) {
