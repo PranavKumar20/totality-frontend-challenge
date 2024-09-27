@@ -15,6 +15,10 @@ interface Property {
   imageUrls: string[];
 }
 
+interface DecodedToken {
+  userId: string;
+}
+
 const PropertyDetailsPage = () => {
   const [property, setProperty] = useState<Property | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -42,7 +46,7 @@ const PropertyDetailsPage = () => {
     const token = localStorage.getItem('token'); 
     if (token) {
       try {
-        const decodedToken: any = jwt.decode(token); 
+        const decodedToken = jwt.decode(token) as DecodedToken; 
         setUserId(decodedToken.userId); 
       } catch (error) {
         console.error('Error decoding token:', error);

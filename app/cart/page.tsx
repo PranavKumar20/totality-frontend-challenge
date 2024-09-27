@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '@/app/config';
 import jwt from 'jsonwebtoken'; 
+import Navbar from '../components/Navbar';
 
 interface Property {
   _id: string;
@@ -192,7 +193,9 @@ const CartPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div>
+      <Navbar />
+      <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
       {properties.length > 0 ? (
         properties.map((property, index) => (
@@ -220,6 +223,7 @@ const CartPage = () => {
       {showModal && (
         <ConfirmationModal onConfirm={confirmCheckout} onCancel={cancelCheckout} />
       )}
+    </div>
     </div>
   );
 };
