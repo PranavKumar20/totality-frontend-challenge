@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import jwt from 'jsonwebtoken'; 
+import jwt from 'jsonwebtoken';
 import Navbar from '@/app/components/Navbar';
+import Loading from '@/app/components/Loading'; // Import Loading component
 import { API_URL } from '@/app/config';
 
 interface Property {
@@ -23,8 +24,8 @@ const PropertyDetailsPage = () => {
   const [property, setProperty] = useState<Property | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [userId, setUserId] = useState<string | null>(null); 
-  const { propertyId } = useParams(); 
+  const [userId, setUserId] = useState<string | null>(null);
+  const { propertyId } = useParams();
 
   useEffect(() => {
     const fetchPropertyDetails = async () => {
@@ -43,11 +44,11 @@ const PropertyDetailsPage = () => {
   }, [propertyId]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     if (token) {
       try {
-        const decodedToken = jwt.decode(token) as DecodedToken; 
-        setUserId(decodedToken.userId); 
+        const decodedToken = jwt.decode(token) as DecodedToken;
+        setUserId(decodedToken.userId);
       } catch (error) {
         console.error('Error decoding token:', error);
       }
@@ -87,7 +88,7 @@ const PropertyDetailsPage = () => {
   };
 
   if (isLoading) {
-    return <p>Loading property details...</p>;
+    return <Loading />; // Use the Loading component
   }
 
   if (!property) {
@@ -100,7 +101,22 @@ const PropertyDetailsPage = () => {
       <div className="container mx-auto p-4">
         <h1 className="text-3xl font-bold mb-4">{property.name}</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <img src={property.imageUrls[0]} alt={property.name} className="w-full h-64 object-cover rounded" />
+          {/* Slideshow for images */}
+          <div className="relative">
+            <div className="overflow-hidden w-full h-64 relative">
+              <div className="whitespace-nowrap transition-transform duration-500 ease-in-out">
+                {property.imageUrls.map((url, index) => (
+                  <img
+                    key={index}
+                    src={url}
+                    alt={property.name}
+                    className="w-full h-64 object-cover inline-block rounded"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* Property details */}
           <div>
             <p>Type: {property.type}</p>
             <p>Price: ₹{property.price}</p>
@@ -119,7 +135,7 @@ const PropertyDetailsPage = () => {
             </div>
             <button
               onClick={handleAddToCart}
-              className="mt-4 p-2 bg-blue-500 text-white"
+              className="mt-4 p-2 bg-blue-500 text-white rounded"
             >
               Add to Cart
             </button>
