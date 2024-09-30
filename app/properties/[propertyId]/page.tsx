@@ -3,8 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import jwt from 'jsonwebtoken';
 import Navbar from '@/app/components/Navbar';
-import Loading from '@/app/components/Loading'; // Import Loading component
+import Loading from '@/app/components/Loading'; 
 import { API_URL } from '@/app/config';
+import { Swiper, SwiperSlide } from 'swiper/react'; 
+import 'swiper/swiper-bundle.min.css'; 
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation, Pagination } from 'swiper/modules';
 
 interface Property {
   propertyId: string;
@@ -101,21 +106,27 @@ const PropertyDetailsPage = () => {
       <div className="container mx-auto p-4">
         <h1 className="text-3xl font-bold mb-4">{property.name}</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Slideshow for images */}
+          {/* Swiper Slideshow for images */}
           <div className="relative">
-            <div className="overflow-hidden w-full h-64 relative">
-              <div className="whitespace-nowrap transition-transform duration-500 ease-in-out">
-                {property.imageUrls.map((url, index) => (
+            <Swiper
+              modules={[Navigation, Pagination]} // Enable Navigation and Pagination
+              navigation // Enable navigation (next/prev arrows)
+              pagination={{ clickable: true }} // Enable clickable pagination dots
+              spaceBetween={10}
+              slidesPerView={1}
+            >
+              {property.imageUrls.map((url, index) => (
+                <SwiperSlide key={index}>
                   <img
-                    key={index}
                     src={url}
-                    alt={property.name}
-                    className="w-full h-64 object-cover inline-block rounded"
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-64 object-cover rounded"
                   />
-                ))}
-              </div>
-            </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
+
           {/* Property details */}
           <div>
             <p>Type: {property.type}</p>
