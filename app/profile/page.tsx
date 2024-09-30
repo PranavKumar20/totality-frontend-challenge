@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
 import { API_URL } from '../config';
 import Navbar from '../components/Navbar';
+import Loading from '../components/Loading';
 
 interface UserDetails {
   name: string;
   email: string;
-  userId: string; // Include userId in the interface
 }
 
 interface OrderItem {
@@ -24,25 +24,23 @@ interface Order {
   createdAt: string;
 }
 
-// Define the interface for the decoded JWT token
 interface DecodedToken {
-  userId: string; // Adjust the type if userId is not a string
-  // Include other properties if your token contains them
+  userId: string;
 }
 
 const ProfilePage = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
+    const token = localStorage.getItem('token');
+    
     const fetchUserDetails = async () => {
       if (!token) return;
 
       try {
-        // Decode the JWT token to get userId
-        const decodedToken = jwt.decode(token) as DecodedToken; // Use the defined type
+        const decodedToken = jwt.decode(token) as DecodedToken;
         const userId = decodedToken?.userId;
 
         if (!userId) {
@@ -52,7 +50,7 @@ const ProfilePage = () => {
         const userResponse = await fetch(`${API_URL}/userdetails`, {
           method: 'GET',
           headers: {
-            'Authorization': token, // Include the token in the Authorization header
+            Authorization: token,
           },
         });
 
@@ -81,43 +79,60 @@ const ProfilePage = () => {
     fetchUserDetails();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (loading) return <Loading />;
 
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-6">
         {userDetails ? (
           <>
-            <h1 className="text-2xl font-bold mb-4">Profile</h1>
-            <p>Name: {userDetails.name}</p>
-            <p>Email: {userDetails.email}</p>
-
-            <h2 className="text-lg font-semibold mt-4">Orders</h2>
-            {orders.length > 0 ? (
-              <div className="space-y-4">
-                {orders.map(order => (
-                  <div key={order._id} className="border p-4 rounded-lg shadow">
-                    <h3 className="font-semibold">Order ID: {order._id}</h3>
-                    <p>Date: {new Date(order.createdAt).toLocaleString()}</p>
-                    <p>Total Amount: ₹{order.totalAmount}</p>
-                    <h4 className="font-semibold mt-2">Items:</h4>
-                    <ul className="list-disc ml-5">
-                      {order.items.map((item: OrderItem) => ( // Explicitly define the type for item
-                        <li key={item._id}>
-                          Property ID: {item.propertyId}, Quantity: {item.quantity}, Price: ₹{item.price}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+              <h1 className="text-3xl font-bold mb-4">Profile Information</h1>
+              <div className="text-lg">
+                <p className="mb-2">
+                  <span className="font-semibold">Name:</span> {userDetails.name}
+                </p>
+                <p>
+                  <span className="font-semibold">Email:</span> {userDetails.email}
+                </p>
               </div>
-            ) : (
-              <p>No orders found.</p>
-            )}
+            </div>
+
+            <div className="bg-white shadow-md rounded-lg p-6">
+              <h2 className="text-2xl font-bold mb-4">Your Orders</h2>
+              {orders.length > 0 ? (
+                <div className="space-y-6">
+                  {orders.map((order) => (
+                    <div key={order._id} className="border border-gray-300 rounded-lg p-4 shadow-md">
+                      <div className="mb-3">
+                        <h3 className="font-semibold text-lg">Order ID: {order._id}</h3>
+                        <p className="text-sm text-gray-500">
+                          Date: {new Date(order.createdAt).toLocaleString()}
+                        </p>
+                        <p className="font-semibold mt-2">Total Amount: ₹{order.totalAmount}</p>
+                      </div>
+                      <h4 className="font-semibold mb-2">Items:</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {order.items.map((item) => (
+                          <li key={item._id} className="text-gray-600">
+                            <span className="font-semibold">Property ID:</span> {item.propertyId}, 
+                            <span className="font-semibold"> Quantity:</span> {item.quantity}, 
+                            <span className="font-semibold"> Price:</span> ₹{item.price}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">No orders found.</p>
+              )}
+            </div>
           </>
         ) : (
-          <p>User details not found.</p>
+          <p className="text-center text-red-500">User details not found.</p>
         )}
       </div>
     </div>
